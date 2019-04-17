@@ -6,7 +6,7 @@ class Board
   def init_board
     @NUM_OF_ROWS = 9
     @NUM_OF_COLUMNS = 9
-    @board = Array.new(@NUM_OF_ROWS){Array.new(@NUM_OF_COLUMNS, Square.new("*"))}
+    @board = Array.new(@NUM_OF_ROWS){Array.new(@NUM_OF_COLUMNS){|e| Square.new("*")}}
     @bomb_locations = Set.new
   end
 
@@ -29,7 +29,7 @@ class Board
   end
 
   def within_boundaries(x, y)
-    x < @NUM_OF_ROWS && y < @NUM_OF_COLUMNS && x > 0 && y > 0
+    x < @NUM_OF_ROWS && y < @NUM_OF_COLUMNS && x > -1 && y > -1
   end
 
   def count_traps(x, y)
@@ -46,11 +46,12 @@ class Board
   end
 
   def set_numbers
-    @board.each.each_with_index do |arr, x|
-      arr.each.each_with_index do |e, y|
-        next if @board[x][y].value == "O"
+    @board.each.with_index do |arr, x|
+      arr.each.with_index do |e, y|
+        next if e.value == "O"
         traps = count_traps(x, y)
-        @board[x][y].value = count_traps(x, y) if traps > 0
+        next if traps == 0
+        e.value = traps
       end
     end
   end
@@ -58,7 +59,6 @@ class Board
   def initialize
     init_board
     generate_bombs
-    render
     set_numbers
     render
   end
@@ -77,3 +77,4 @@ class Board
 end
 
 Board.new
+
