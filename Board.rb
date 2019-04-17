@@ -28,16 +28,29 @@ class Board
     end
   end
 
-  def count_traps(coords)
+  def within_boundaries(x, y)
+    x < @NUM_OF_ROWS && y < @NUM_OF_COLUMNS && x > 0 && y > 0
+  end
+
+  def count_traps(x, y)
     total = 0
-    total += 1 if @board[coords[0]-1][coords[1]-1].value = "O"
-    total += 1 
+    total += 1 if within_boundaries(x-1,y-1) && @board[x-1][y-1].value == "O"
+    total += 1 if within_boundaries(x-1,y) && @board[x-1][y].value == "O"
+    total += 1 if within_boundaries(x-1,y+1) && @board[x-1][y+1].value == "O"
+    total += 1 if within_boundaries(x,y+1) && @board[x][y+1].value == "O"
+    total += 1 if within_boundaries(x+1,y+1) && @board[x+1][y+1].value == "O"
+    total += 1 if within_boundaries(x+1,y) && @board[x+1][y].value == "O"
+    total += 1 if within_boundaries(x+1,y-1) && @board[x+1][y-1].value == "O"
+    total += 1 if within_boundaries(x,y-1) && @board[x][y-1].value == "O"
+    total
   end
 
   def set_numbers
-    @board.each do |arr|
-      arr.each do |e|
-        
+    @board.each.each_with_index do |arr, x|
+      arr.each.each_with_index do |e, y|
+        next if @board[x][y].value == "O"
+        traps = count_traps(x, y)
+        @board[x][y].value = count_traps(x, y) if traps > 0
       end
     end
   end
@@ -45,6 +58,9 @@ class Board
   def initialize
     init_board
     generate_bombs
+    render
+    set_numbers
+    render
   end
 
   def render
@@ -60,4 +76,4 @@ class Board
 
 end
 
-Board.new.render
+Board.new
