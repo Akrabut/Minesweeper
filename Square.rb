@@ -2,15 +2,28 @@ require 'colorize'
 
 class Square
 
-  attr_accessor :value
+  attr_accessor :value, :show
 
   def initialize(value)
     @value = value
-    @show = true
+    @show = false
   end
 
   def flip
     @show = true
+    @value = "_" if @value == "*"
+  end
+
+  def ==(other)
+    @value==other.value
+  end
+
+  def !=(other)
+    !(self==other)
+  end
+
+  def flippable?
+    @value != "O" && @value != "_" && !@show
   end
 
   def to_s
@@ -25,7 +38,7 @@ class Square
       return @value.to_s.colorize(:black) if @value == 8
       return @value.colorize(:red) if @value == "O"
       return @value
-    else @value
+    else "*"
     end
   end
   
