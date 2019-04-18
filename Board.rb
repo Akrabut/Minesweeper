@@ -19,6 +19,7 @@ class Board
     @board[coords[0]][coords[1]] = value
   end
 
+  #randomly generates 10 bombs for the 9x9 board
   def generate_bombs
     until @bomb_locations.length == 10
       coords = [rand(0..@NUM_OF_ROWS-1), rand(0..@NUM_OF_COLUMNS-1)]
@@ -33,6 +34,7 @@ class Board
     x < @NUM_OF_ROWS && y < @NUM_OF_COLUMNS && x > -1 && y > -1
   end
 
+  #counts the traps in the adjacent squares
   def count_traps(x, y)
     total = 0
     total += 1 if within_boundaries?(x-1,y-1) && @board[x-1][y-1].value == "O"
@@ -46,6 +48,7 @@ class Board
     total
   end
 
+  #sets the numeric square value according to the counted traps
   def set_numbers
     @board.each.with_index do |arr, x|
       arr.each.with_index do |e, y|
@@ -75,6 +78,7 @@ class Board
     render
   end
 
+  #reveals adjacent squares in case of empty square selection
   def reveal_adjacent_cells(coords)
     self[coords].flip
     return if self[coords].value.is_a?(Integer)
@@ -99,6 +103,7 @@ class Board
     exit(1)
   end
 
+  #takes and validates user input
   def get_input
     user = Input.new
     loop do
