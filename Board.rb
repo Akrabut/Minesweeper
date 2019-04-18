@@ -89,11 +89,10 @@ class Board
   end
 
   def game_over?
-    @board.all? {|arr| arr.none? {|e| e.value == "*"}}
+    @board.all? {|arr| arr.all? {|e| e.show if e.value != "O"}}
   end
 
   def loss(input)
-    #reveal_everything
     self[input].flip
     render
     puts "\n\nDefeat!!\nYou've been exploded to pieces!\n\n".colorize(:red)
@@ -116,12 +115,15 @@ class Board
   end
 
   def play
+    start = Time.now
     until game_over?
       get_input
       system("cls")
       render
     end
+    finish = Time.now
     render
+    puts "Timer elapsed at #{finish-start} seconds!"
     puts "\n\nVicory!!\nYou've sweeped everything!!\n\n".colorize(:green)
     sleep(5)
     reveal_everything
